@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -47,13 +47,38 @@ class _HomeState extends State<Home> {
 
       floatingActionButton: IconButton(
           onPressed: ()async{
+            getCurrentLocation().then((position) async {
+
+              Marker marker=Marker(markerId: MarkerId("current location"),
+              position: LatLng(position.latitude,position.longitude),
+              infoWindow: InfoWindow(
+                title: "Current Location"
+              ));
+              _markers.add(marker);
+              GoogleMapController controller=await mapcontroller.future;
+              controller.animateCamera(CameraUpdate.newCameraPosition(
+                  CameraPosition(
+                      target: LatLng(position.latitude,position.longitude),
+                      zoom: 13)
+              ));
+            });
+
           GoogleMapController controller=await mapcontroller.future;
           controller.animateCamera(CameraUpdate.newCameraPosition(
             CameraPosition(
                 target: LatLng(34.0837, 74.7973),
             zoom: 13)
           ));
-          }, icon: Icon(Icons.location_searching,size: 70,)),
+          }, icon: Icon(Icons.location_searching,size: 80,),color: Colors.blue,),
     );
+  }
+
+  Future<Position> getCurrentLocation()async{
+    await Geolocator.requestPermission().then((value){
+
+    }).onError((error ,stacktrace){
+      print(error.toString());
+    });
+    return Geolocator.getCurrentPosition();
   }
 }
