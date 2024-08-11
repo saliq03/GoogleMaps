@@ -55,6 +55,7 @@ class _HomeState extends State<Home> {
                 title: "Current Location"
               ));
               _markers.add(marker);
+              setState(() {});
               GoogleMapController controller=await mapcontroller.future;
               controller.animateCamera(CameraUpdate.newCameraPosition(
                   CameraPosition(
@@ -63,12 +64,7 @@ class _HomeState extends State<Home> {
               ));
             });
 
-          GoogleMapController controller=await mapcontroller.future;
-          controller.animateCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(
-                target: LatLng(34.0837, 74.7973),
-            zoom: 13)
-          ));
+
           }, icon: Icon(Icons.location_searching,size: 80,),color: Colors.blue,),
     );
   }
