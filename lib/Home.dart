@@ -12,7 +12,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   Completer<GoogleMapController> mapcontroller=Completer();
-  
   static const CameraPosition _kGooglePlex=CameraPosition(
       target: LatLng(17.37244, 78.43782),
       zoom: 17);
