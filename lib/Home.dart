@@ -69,11 +69,28 @@ class _HomeState extends State<Home> {
   }
 
   Future<Position> getCurrentLocation()async{
-    await Geolocator.requestPermission().then((value){
+    bool serviceEnabled;
+    LocationPermission permission;
 
-    }).onError((error ,stacktrace){
-      print(error.toString());
-    });
-    return Geolocator.getCurrentPosition();
+    serviceEnabled=await Geolocator.isLocationServiceEnabled();
+    if(!serviceEnabled){
+      print("service not enabled");
+      return Future.error("service not enabled");
+    }
+
+   permission=await Geolocator.checkPermission();
+    if(permission==LocationPermission.denied){
+      permission=await Geolocator.requestPermission();
+      if(permission==LocationPermission.denied){
+        print("permission denied");
+        return Future.error("permission denied");
+      }}
+
+    if(permission==LocationPermission.deniedForever){
+      print("permission denied forever");
+      return Future.error("permission denied forever");
+    }
+
+    return await Geolocator.getCurrentPosition();
   }
 }
