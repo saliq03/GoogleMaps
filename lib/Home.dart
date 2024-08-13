@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps/Utils/Constants.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -29,6 +31,17 @@ class _HomeState extends State<Home> {
       infoWindow: InfoWindow(title: "Srinagar")
     )
   ];
+
+  Map<PolylineId,Polyline> polylines={};
+
+  @override
+  void initState() {
+    super.initState();
+    getPolylinePoints(LatLng(17.37244, 78.43782),LatLng(18.37244, 77.43782)).then((coordinates){
+      print(coordinates);
+      generatePolylineFromPoints(PolylineId("Polyline1"), coordinates);
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +55,7 @@ class _HomeState extends State<Home> {
           compassEnabled: true,
           myLocationEnabled: true,
           markers: Set<Marker>.of(_markers),
+          polylines: Set<Polyline>.of(polylines.values),
         )),
 
       floatingActionButton: IconButton(
@@ -92,5 +106,40 @@ class _HomeState extends State<Home> {
     }
 
     return await Geolocator.getCurrentPosition();
+  }
+
+  Future<List<LatLng>> getPolylinePoints(LatLng source,LatLng destination) async {
+    List<LatLng> polylineCoordinates=[];
+    print(" i am here\n");
+    PolylinePoints polylinePoints=PolylinePoints();
+    print(" i am here\n");
+    PolylineResult result=await polylinePoints.getRouteBetweenCoordinates(
+      googleApiKey: Constants.googleMap_ApiKey,
+        request: PolylineRequest(
+            origin: PointLatLng(source.latitude, source.longitude),
+            destination: PointLatLng(destination.latitude, destination.longitude), mode: TravelMode.driving));
+    if(result.points.isNotEmpty){
+      print(" result is not empty\n");
+      result.points.forEach((PointLatLng point){
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+    }
+    else{
+      print(result.errorMessage);
+    }
+
+    return polylineCoordinates;
+  }
+  
+  void generatePolylineFromPoints(PolylineId id,List<LatLng> polylineCoordinates){
+    Polyline polyline =Polyline(
+        polylineId: id,
+     points:  polylineCoordinates,
+    color: Colors.blueAccent,
+    width: 8);
+    setState(() {
+      polylines[id]=polyline;
+    });
+
   }
 }
