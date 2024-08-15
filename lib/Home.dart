@@ -24,7 +24,11 @@ class _HomeState extends State<Home> {
    infoWindow:InfoWindow(
      title:'my current location'
    )),
-    
+    Marker(markerId: MarkerId('2'),
+        position: LatLng(15.37244, 77.43782),
+        infoWindow:InfoWindow(
+            title:'my current location'
+        )),
     Marker(
         markerId: MarkerId('srinagar'),
          position: LatLng(34.0837, 74.7973),
