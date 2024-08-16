@@ -7,7 +7,6 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
-
   @override
   State<Home> createState() => _HomeState();
 }
@@ -35,14 +34,12 @@ class _HomeState extends State<Home> {
       infoWindow: InfoWindow(title: "Srinagar")
     )
   ];
-
   Map<PolylineId,Polyline> polylines={};
 
   @override
   void initState() {
     super.initState();
     getPolylinePoints(LatLng(17.37244, 78.43782),LatLng(18.37244, 77.43782)).then((coordinates){
-      print(coordinates);
       generatePolylineFromPoints(PolylineId("Polyline1"), coordinates);
     });
   }
@@ -143,7 +140,7 @@ class _HomeState extends State<Home> {
     width: 8);
     setState(() {
       polylines[id]=polyline;
-    });
+     });
 
   }
 }
