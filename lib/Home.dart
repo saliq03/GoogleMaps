@@ -40,7 +40,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     getPolylinePoints(LatLng(17.37244, 78.43782),LatLng(18.37244, 77.43782)).then((coordinates){
-      generatePolylineFromPoints(PolylineId("Polyline1"), coordinates);
+      generatePolylineFromPoints(PolylineId("Polyline"), coordinates);
     });
   }
   @override
